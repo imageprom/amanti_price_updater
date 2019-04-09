@@ -14,20 +14,21 @@ class CImportRosholod extends CImportData {
 	protected $deliverCode = 'rosholod';
 	
 	protected static $source = 'https://rosholod.org/files/XML/Ostatki.xml';
-	protected static $file = __DIR__.'/Ostatki.xml';
+	protected static $file = '/upload/nx_import/Ostatki.xml';
+	protected static $archive = '/upload/nx_import/archive/Ostatki.xml';
 
 	public function ReadSource() {
 		
 		try{
 			
 			$xmlData = file_get_contents(self::$source);
-			file_put_contents(self::$file, $xmlData);
+			file_put_contents($_SERVER['DOCUMENT_ROOT'].self::$file, $xmlData);
 			unset($xmlData);
 
-			if(!is_readable(self::$file)) throw new Exception('Can\'t read '.self::$file);
-			if (filesize (self::$file) == 0) return false;
+			if(!is_readable($_SERVER['DOCUMENT_ROOT'].self::$file)) throw new Exception('Can\'t read '.$_SERVER['DOCUMENT_ROOT'].self::$file);
+			if (filesize ($_SERVER['DOCUMENT_ROOT'].self::$file) == 0) return false;
 
-			$xml = simplexml_load_file(self::$file);
+			$xml = simplexml_load_file($_SERVER['DOCUMENT_ROOT'].self::$file);
 
 			if(count($xml->shop->offers->ДетальнаяЗапись) == 0) return false;
 			foreach ($xml->shop->offers->ДетальнаяЗапись as $arItem) {
@@ -47,6 +48,15 @@ class CImportRosholod extends CImportData {
     		echo $e->getMessage().PHP_EOL;
     		throw $e;
 		} 
+	}
+
+	public function Archive() {
+		if (copy($_SERVER['DOCUMENT_ROOT'].self::$file, $_SERVER['DOCUMENT_ROOT'].self::$archive)) {
+    		unlink($_SERVER['DOCUMENT_ROOT'].self::$file);
+    		return true;
+		}
+
+		return false;
 	}
 }
 ?>

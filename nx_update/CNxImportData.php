@@ -22,7 +22,6 @@ class Exception extends \Exception{}
 */
 
 
-
 class CItem {
 	
 	private $arData = array('NAME' => '', 'CODE' => '', 'PRICE' => 0, 'CUR' => 'RUB');
@@ -132,6 +131,13 @@ interface IImportData {
 	* @return CItem[] или false
 	*/
 	public function Search($code);
+
+	/**
+	* Сохранение данных в архив
+	* @return void
+	*/
+	
+	public function Archive();
 }
 
 /**

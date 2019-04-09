@@ -21,29 +21,24 @@ echo '<pre>';
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/php_interface/nx_update/CNxImportData.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/php_interface/nx_update/CNxRosholod.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/php_interface/nx_update/CNxGastrorag.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/php_interface/nx_update/CNxCatalogUpdater.php');
 
 
 $importData = new \NxUpdater\CImportRosholod();
 $updater = new \NxUpdater\CCatalogUpdater(17);
-
 $updater->ImportPrice($importData);
+$importData->Archive();
 
-//$updater->UpdatePrice(3885, 'RUB', 0.1);
+unset($updater);
 
-// $arSelect = Array('IBLOCK_ID', 'ID', 'NAME', 'XML_ID', 'PROPERTY_BRAND');
-// $arFilter = Array('IBLOCK_ID' => 17, 'XML_ID' => '00%');
-// $dbRes = CIBlockElement::GetList(array(), $arFilter, false, false, $arSelect);
+$updater = new \NxUpdater\CCatalogUpdater(17);
+$importData = new \NxUpdater\CImportGastrorag();
+$updater->ImportPrice($importData);
+$importData->Archive();
 
-// while($arFields = $dbRes->GetNext()) {
-
-// 	echo $arFields['XML_ID'].' - '.$arFields['NAME'].' - '.$arFields['PROPERTY_BRAND_VALUE'].'<br />';
-
-// 	//CIBlockElement::SetPropertyValuesEx($arFields['ID'], 17, array('NX_DELIVER' => 'rosholod'));
-
-// 	$updater->UpdateDeliver($arFields['ID'], $tmp->GetDeliverCode());
-
-// }
+exec('chmod -R 775 '.$_SERVER["DOCUMENT_ROOT"].'/upload/nx_import/');
+exec('chown -R amanti:www-data '.$_SERVER["DOCUMENT_ROOT"].'/upload/nx_import/');
 
 echo '</pre>';
 ?>

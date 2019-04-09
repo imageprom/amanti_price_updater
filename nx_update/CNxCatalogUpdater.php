@@ -129,6 +129,34 @@ class CCatalogUpdater {
     		throw $e;
 		} 
 	}
+
+	/**
+	* Присвоить внешний код
+	* @var int $ID - ID элемента
+	* @var string $Code - код поставщика
+	* @return true или false
+	*/
+
+	public function UpdateCode($ID, $Code) {	
+		try{
+			
+			if(!$ID) {
+				throw new Exception('Invalid element ID');
+			}
+
+			if(!$Code) {
+				throw new Exception('Invalid element Code');
+			}
+
+			$el = new \CIBlockElement; 
+			$res = $el->Update($ID, array('XML_ID' => $Code));
+			return true;
+		}
+
+		catch (Exception $e) {
+    		throw $e;
+		} 
+	}
 	
 	/**
 	* Обновить цены
