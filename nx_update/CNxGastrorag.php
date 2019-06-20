@@ -27,8 +27,12 @@ class CImportGastrorag extends CImportData {
 				return 'EUR';
 				break;
 
-			default:
+			case 'RUB':
 				return 'RUB';
+				break;
+
+			default:
+				return false;
 				break;
 		}
 
@@ -73,12 +77,23 @@ class CImportGastrorag extends CImportData {
 				$name = self::getName($csvData[2]);
 				$code = $csvData[1];
 
-				$curr = self::getCurrency($csvData[10]);
+				$curr = self::getCurrency($csvData[8]);
 
-				$price = self::formatPrice($csvData[9]);;
-				$price = self::getMargin(floatval($price));
-				
-				$this->addItem(new CItem(strval($name), strval($code), $price, $curr)); 
+				if(!$curr) {
+					CCatalogUpdater::Log('Item '.$code, 'Invalid Item');	
+				}
+				else {
+
+					if(self::getCurrency($csvData[7])) {
+						CCatalogUpdater::Log('Item '.$code, 'Invalid Item - invalid price');
+					}	
+					else {
+						$price = self::formatPrice($csvData[7]);;
+						$price = self::getMargin(floatval($price));
+
+						$this->addItem(new CItem(strval($name), strval($code), $price, $curr));
+					}
+				} 
 			}
 
 			return true;
@@ -87,6 +102,10 @@ class CImportGastrorag extends CImportData {
     		echo $e->getMessage().PHP_EOL;
     		throw $e;
 		} 
+	}
+
+	public static function ExistFile() {
+		return file_exists($_SERVER['DOCUMENT_ROOT'].self::$source);
 	}
 
 	public function Archive() {
@@ -119,7 +138,7 @@ class CImportGastrorag extends CImportData {
 				$updater->UpdateCode($arFields['ID'],  $arValue->CODE);
 				$updater->UpdateDeliver($arFields['ID'], $this->deliverCode);
 
-				print_r($arFields);
+				//print_r($arFields);
 			}
 
 		}
