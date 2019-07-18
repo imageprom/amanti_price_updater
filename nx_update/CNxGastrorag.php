@@ -52,16 +52,22 @@ class CImportGastrorag extends CImportData {
 
 	public static function getMargin($price) {
 
-		if    ($price <= 100  ) $margin = 0.6;
-		elseif($price <= 200  ) $margin = 0.55;
-		elseif($price <= 250  ) $margin = 0.45;
-		elseif($price <= 300  ) $margin = 0.3;
-		elseif($price <= 400  ) $margin = 0.25;
-		elseif($price <= 500  ) $margin = 0.2;
-		elseif($price <= 700  ) $margin = 0.18;
-		elseif($price <= 800  ) $margin = 0.16;
-		elseif($price <= 2000 ) $margin = 0.15;
-		else   					$margin = 0.1;
+		$add = 0;
+
+		// if    ($price <= 100  ) $margin = 0.6;
+		// elseif($price <= 200  ) $margin = 0.55;
+		// elseif($price <= 250  ) $margin = 0.45;
+		// elseif($price <= 300  ) $margin = 0.3;
+		
+		if    ($price <= 300  ) { $margin = 0.24; $add = 9;}
+		elseif($price <= 400  ) { $margin = 0.25;}
+		elseif($price <= 500  ) { $margin = 0.2;}
+		elseif($price <= 700  ) { $margin = 0.18;}
+		elseif($price <= 800  ) { $margin = 0.16;}
+		elseif($price <= 2000 ) { $margin = 0.15;}
+		else   					{ $margin = 0.1;}
+
+		$price += $add;
 
 		return ($price + $price*$margin);
 	}
